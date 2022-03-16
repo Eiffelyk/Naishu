@@ -15,13 +15,34 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
-    buildTypes {
+    signingConfigs {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            storeFile file(RELEASE_STOREFILE)
+            storePassword RELEASE_KEYSTORE_PASSWORD
+            keyPassword RELEASE_KEYSTORE_PASSWORD
+            keyAlias KEYALIAS
+        }
+        debug {
+            storeFile file(RELEASE_STOREFILE)
+            storePassword RELEASE_KEYSTORE_PASSWORD
+            keyPassword RELEASE_KEYSTORE_PASSWORD
+            keyAlias KEYALIAS
         }
     }
+    buildTypes {
+        release {
+            minifyEnabled true
+            zipAlignEnabled true // Zipalign优化
+            shrinkResources true  // 移除无用的resource文件
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
